@@ -299,7 +299,7 @@ class Instance:
                     
         self.instance_data = df_instance
         
-        print(self.instance_data)
+        # print(self.instance_data)
     
         
         
