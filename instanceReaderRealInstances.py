@@ -29,7 +29,13 @@ class Instance:
         
         # Capacidades da frota
         
-        self.K =[list(map(int, el.split())) for el in lines[2].split(',')]
+        vehicles =[list(map(int, el.split())) for el in lines[2].split(',')]
+        
+        self.K = []
+
+        for vehicles_set in vehicles:
+            
+            self.K.extend(vehicles_set)
         
         # Localizações dos veículos, segundo depots
         
@@ -37,7 +43,7 @@ class Instance:
         
         v = 0
         
-        for location in self.K:
+        for location in vehicles:
             
             index_vehicles = []
             
@@ -51,7 +57,7 @@ class Instance:
         
         # Maior capacidade (usada para nós artificiais)
         
-        self.maxQ = max([max(el) for el in self.K if len(el) > 0])
+        self.maxQ = max([max(el) for el in vehicles if len(el) > 0])
         
         # Número de requests (incluindo pedidos artificiais)
         
@@ -81,7 +87,7 @@ class Instance:
             
             artificial_deliveries = []
             
-            for location, depot in zip(self.K, depot_nodes):
+            for location, depot in zip(vehicles, depot_nodes):
                 
                 for vehicle_capacity in location:
                     
@@ -108,7 +114,7 @@ class Instance:
             if split_loads:
                 
                 fleet_capacities_1D = []
-                for location in self.K:
+                for location in vehicles:
                     
                     for vehicle_capacity in location:
                         
@@ -217,6 +223,9 @@ class Instance:
         # Fim da janela de tempo de cada nó "i"
         self.w_b = [line[4] for line in instance]
         
+        # Número de depósitos
+        self.number_of_depots = len(depot_nodes)
+        
         # Distâncias
         
         self.c = [[0 for i in range(len(instance))] for j in range(len(instance))]
@@ -258,9 +267,9 @@ class Instance:
             
             df_instance['type'] = ["Depot"]*len(depot_nodes) + ["Pickup"]*len(depot_nodes) + ["Delivery"]*(self.n - self.m) +  ["Depot"]*len(depot_nodes)
         
-        pd.set_option('display.max_rows', len(df_instance))
+        df_instance = df_instance[["type","county", "lat", "lon","s","d","w_a","w_b"]]
         
-        print(df_instance)
+        pd.set_option('display.max_rows', len(df_instance))
                     
         self.instance_data = df_instance
 

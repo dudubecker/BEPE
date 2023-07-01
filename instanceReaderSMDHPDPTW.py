@@ -33,7 +33,6 @@ class Instance:
         # All other parameters of instance
         instance = [list(map(float, line.split())) for line in lines[1:]]
         
-        
         # Adding pickup and depot nodes
         
         # Depots set
@@ -100,6 +99,12 @@ class Instance:
 
         # Fim da janela de tempo de cada nó "i"
         self.w_b = [line[6] for line in instance]
+        
+        # Number of depots
+        self.number_of_depots = number_of_depots
+        
+        # Vehicles locations
+        self.vehicle_locations = vehicle_locations
 
         # Tempo de viagem (igual/proporcional à distância entre cada nó): inicia-se como 0
         self.c = [[0 for i in range(len(instance))] for j in range(len(instance))]
@@ -123,7 +128,6 @@ class Instance:
                     
         self.instance_data = df_instance
         
-        print(self.instance_data)
         
         
         

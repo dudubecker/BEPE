@@ -67,7 +67,7 @@ class Instance:
                        
                        # Parameters for split deliveries
                        split_loads=False,
-                       demand_factor=0):
+                       demand_factor=1):
         
 
         # Reading file data
