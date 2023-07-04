@@ -17,6 +17,9 @@ class Instance:
                        # Parâmetros para abordagem de SMDHPDPTW
                        model = 'HPDPTW',
                        
+                       # Tentativa de acabar rotas em depósito "artificial"
+                       artificial_depot = False
+                       
                        ):
         
         
@@ -208,6 +211,10 @@ class Instance:
 
         # Parâmetros da instância
         
+        if artificial_depot:
+            
+            instance.append(instance[0])
+        
         # Municípios
         counties = [line[0] for line in instance]
         
@@ -238,7 +245,20 @@ class Instance:
             for j, county_j in enumerate(counties):
                 
                 dist = round(df_distances[county_i][county_j].min()/avgSpeed, 3)
-                self.c[i][j] = dist
+                
+                # Se for o depot artificial
+                
+                if (i == len(counties) - 1) and (artificial_depot):
+                    
+                    self.c[i][j] = 0
+                    
+                elif (j == len(counties) - 1) and (artificial_depot):
+                    
+                    self.c[i][j] = 0
+                    
+                else:
+                    
+                    self.c[i][j] = dist
         
         # Coordinates for plot
         
@@ -263,14 +283,21 @@ class Instance:
         
             df_instance['type'] = ["Depot"]*len(depot_nodes) + ["Artificial pickup"]*self.m + ["Pickup"]*(self.n - self.m) + ["Artificial delivery"]*(self.m) + ["Delivery"]*(self.n - self.m) +  ["Depot"]*len(depot_nodes)
         
-        else:
+        elif model == 'SMDHPDPTW' and not artificial_depot:
             
             df_instance['type'] = ["Depot"]*len(depot_nodes) + ["Pickup"]*len(depot_nodes) + ["Delivery"]*(self.n - self.m) +  ["Depot"]*len(depot_nodes)
+            
+        elif model == 'SMDHPDPTW' and artificial_depot:
+            
+            df_instance['type'] = ["Depot"]*len(depot_nodes) + ["Pickup"]*len(depot_nodes) + ["Delivery"]*(self.n - self.m) +  ["Depot"]*(len(depot_nodes)+1)
+            
         
         df_instance = df_instance[["type","county", "lat", "lon","s","d","w_a","w_b"]]
         
         pd.set_option('display.max_rows', len(df_instance))
                     
         self.instance_data = df_instance
+        
+        
 
         
