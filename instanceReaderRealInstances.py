@@ -244,8 +244,16 @@ class Instance:
         for i, county_i in enumerate(counties):
             for j, county_j in enumerate(counties):
                 
-                dist = round(df_distances[county_i][county_j].min()/avgSpeed, 3)
-                
+                # A distância de um nó "i" para um nó "j" é igual ao tempo de viagem de "i" para "j" + o tempo de serviço do nó "j"!
+
+                if i != j:
+
+                    dist = round(df_distances[county_i][county_j].min()/avgSpeed, 3) + self.s[j]
+                    
+                else:
+                    
+                    dist = 0
+
                 # Se for o depot artificial
                 
                 if (i == len(counties) - 1) and (artificial_depot):
